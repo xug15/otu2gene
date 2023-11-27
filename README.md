@@ -35,13 +35,13 @@ vsmap(){
 name1=$1
 name2=$2
 ((counter++))
-file='a1-map'
-[[ -d $output/${file}/log ]] || mkdir -p $output/${file}/log
+file=''
+[[ -d $output/log ]] || mkdir -p $output/log
 echo -e "#!/bin/bash
-#SBATCH -o ${output}/$file/log/${name}.%j.out
-#SBATCH -e ${output}/$file/log/${name}.%j.error
+#SBATCH -o ${output}/log/${name1}.%j.out
+#SBATCH -e ${output}/log/${name1}.%j.error
 #SBATCH --partition=${node}
-#SBATCH -J 1${name}
+#SBATCH -J 1${name1}
 #SBATCH -N 1
 #SBATCH -n ${thread}
 echo date
@@ -61,13 +61,12 @@ aligned_ssu.tsv结果如下，即blast output format 6 file：
 组的唯一对应ID（asv_vs._genome_id.txt）  
 
 ```sh
+#cd data
+#python ../script/according_to_vsearch_blast6out_result_extract_the_single_match_genome.py -i PAN_607_aligned_ssu.tsv -o1 asv_genome_id_unique_match_ID.txt -o2 result
+#cut -f 1,2 asv_genome_id_unique_match_ID.txt 
+#cd ..
+perl script/extract.96.pl data/PAN_607_aligned_ssu.tsv data/asv_genome_id_unique_match_ID.txt 
 
-getASVgenome(){
-python script/according_to_vsearch_blast6out_result_extract_the_single_match_genome.py -i PAN_607_aligned_ssu.tsv -o1 asv_genome_id_unique_match_ID.txt -o2 result
-
-
-}
-getASVgenome PAN_607_aligned_ssu.tsv asv_genome_id_unique_match_ID.txt
 
 ```
 反之，如果B列都有唯一匹配的基因组序列：
