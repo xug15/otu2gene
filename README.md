@@ -19,7 +19,37 @@ vsearch --makeudb_usearch bac120_ssu_reps_r207.fna -output bac120_ssu_reps_r207.
 ## 1. Align the ASVs representative sequences to the GTDB reference database
 
 ```sh
-vsearch --usearch_global refseq.fasta --db bac120_ssu_reps_r207.udb --strand both --notrunclabels --iddef 0 --id 0.99 --maxrejects 100 --maxaccepts 100 --blast6out PAN_607_aligned_ssu.tsv --threads 16
+thread=50
+db=/public/home/2022122/chenhuilong/ph_preference/data/bac120_ssu_reps_r207.udb
+#node=Fnode2
+#node=Fnode1
+node=Cnode
+node=Cnode2
+#node=Gnode
+counter=0
+output=`pwd`/data
+vsmap(){
+name1=$1
+name2=$2
+((counter++))
+file='a1-map'
+[[ -d $output/${file}/log ]] || mkdir -p $output/${file}/log
+echo -e "#!/bin/bash
+#SBATCH -o ${output}/$file/log/${name}.%j.out
+#SBATCH -e ${output}/$file/log/${name}.%j.error
+#SBATCH --partition=${node}
+#SBATCH -J 1${name}
+#SBATCH -N 1
+#SBATCH -n ${thread}
+echo date
+source /public/home/2022122/.bashrc
+vsearch --usearch_global data/${name1} --db ${db} --strand both --notrunclabels --iddef 0 --id 0.99 --maxrejects 100 --maxaccepts 100 --blast6out data/${name2} --threads ${thread}
+" > a1.vsmapf.${counter}.${name1}.sh
+vsmap pH_preferences_ASVs_PAN_ID.607.fast PAN_607_aligned_ssu.tsv
+
+}
+
+
 ```
 aligned_ssu.tsv结果如下，即blast output format 6 file：
 
@@ -29,7 +59,22 @@ aligned_ssu.tsv结果如下，即blast output format 6 file：
 组的唯一对应ID（asv_vs._genome_id.txt）  
 
 ```sh
-python according_to_vsearch_blast6out_result_extract_the_single_match_genome.py -i PAN_607_aligned_ssu.tsv -o1 asv_genome_id_unique_match_ID.txt -o2 result
+thread=50
+db=/public/home/2022122/chenhuilong/ph_preference/data/bac120_ssu_reps_r207.udb
+#node=Fnode2
+#node=Fnode1
+node=Cnode
+node=Cnode2
+#node=Gnode
+counter=0
+output=`pwd`/data
+getASVgenome(){
+python script/according_to_vsearch_blast6out_result_extract_the_single_match_genome.py -i PAN_607_aligned_ssu.tsv -o1 asv_genome_id_unique_match_ID.txt -o2 result
+
+
+}
+getASVgenome PAN_607_aligned_ssu.tsv asv_genome_id_unique_match_ID.txt
+
 ```
 反之，如果B列都有唯一匹配的基因组序列：
 
