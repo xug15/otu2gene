@@ -50,7 +50,7 @@ vsearch --usearch_global data/${name1} --db ${db} --strand both --notrunclabels 
 " > a1.vsmapf.${counter}.${name1}.sh
 }
 
-vsmap pH_preferences_ASVs_PAN_ID.607.fast PAN_607_aligned_ssu.tsv
+vsmap pH_preferences_ASVs_PAN_ID.607.fasta PAN_607_aligned_ssu.tsv
 
 ```
 aligned_ssu.tsv结果如下，即blast output format 6 file：
