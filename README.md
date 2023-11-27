@@ -17,7 +17,6 @@ vsearch --makeudb_usearch bac120_ssu_reps_r207.fna -output bac120_ssu_reps_r207.
 ```
 
 ## 1. Align the ASVs representative sequences to the GTDB reference database
-
 ```sh
 thread=50
 db=/public/home/2022122/chenhuilong/ph_preference/data/bac120_ssu_reps_r207.udb
@@ -28,6 +27,10 @@ node=Cnode2
 #node=Gnode
 counter=0
 output=`pwd`/data
+
+```
+```sh
+
 vsmap(){
 name1=$1
 name2=$2
@@ -58,15 +61,7 @@ aligned_ssu.tsv结果如下，即blast output format 6 file：
 组的唯一对应ID（asv_vs._genome_id.txt）  
 
 ```sh
-thread=50
-db=/public/home/2022122/chenhuilong/ph_preference/data/bac120_ssu_reps_r207.udb
-#node=Fnode2
-#node=Fnode1
-node=Cnode
-node=Cnode2
-#node=Gnode
-counter=0
-output=`pwd`/data
+
 getASVgenome(){
 python script/according_to_vsearch_blast6out_result_extract_the_single_match_genome.py -i PAN_607_aligned_ssu.tsv -o1 asv_genome_id_unique_match_ID.txt -o2 result
 
