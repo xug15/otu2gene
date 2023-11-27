@@ -45,10 +45,9 @@ echo date
 source /public/home/2022122/.bashrc
 vsearch --usearch_global data/${name1} --db ${db} --strand both --notrunclabels --iddef 0 --id 0.99 --maxrejects 100 --maxaccepts 100 --blast6out data/${name2} --threads ${thread}
 " > a1.vsmapf.${counter}.${name1}.sh
-vsmap pH_preferences_ASVs_PAN_ID.607.fast PAN_607_aligned_ssu.tsv
-
 }
 
+vsmap pH_preferences_ASVs_PAN_ID.607.fast PAN_607_aligned_ssu.tsv
 
 ```
 aligned_ssu.tsv结果如下，即blast output format 6 file：
