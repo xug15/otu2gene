@@ -1,32 +1,28 @@
 # otu2gene
 ## 0. Prepare the database.
 
-[refence site](https://github.com/fiererlab/ph_preference)
+[https://github.com/fiererlab/ph_preference](https://github.com/fiererlab/ph_preference)
 
 ### Matching ASVs to GTDB 
 Download genome/16S rDNA SSU database
 ```sh
-wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/genomic_files_reps/bac120_ssu_reps_r207.tar.gz tar -xzvf bac120_ssu_reps_r207.tar.gz
+wget https://data.gtdb.ecogenomic.org/releases/release207/207.0/genomic_files_reps/bac120_ssu_reps_r207.tar.gz 
+
+tar -xzvf bac120_ssu_reps_r207.tar.gz
 ```
 ### Transform database to a vsearch reference database
 ```sh
 
 vsearch --makeudb_usearch bac120_ssu_reps_r207.fna -output bac120_ssu_reps_r207.udb
 ```
-### Align the ASVs representative sequences to the reference database
-```sh
-vsearch --usearch_global refseq.fasta --db bac120_ssu_reps_r207.udb --strand both --notrunclabels --iddef 0 --id 0.99 --maxrejects 100 --maxaccepts 100 --blast6out aligned_ssu.tsv --threads 16
-```
-### Annotate the genomes with functions
 
-## 1. Mach ASV to GTDB database squence.
-```sh
-vsearch --makeudb_usearch bac120_ssu_reps_r207.fna -output bac120_ssu_reps_r207.udb
-```
+## 1. Align the ASVs representative sequences to the GTDB reference database
+
 ```sh
 vsearch --usearch_global refseq.fasta --db bac120_ssu_reps_r207.udb --strand both --notrunclabels --iddef 0 --id 0.99 --maxrejects 100 --maxaccepts 100 --blast6out PAN_607_aligned_ssu.tsv --threads 16
 ```
 aligned_ssu.tsv结果如下，即blast output format 6 file：
+
 ## 2. select the aligment bewteen ASV and reference genomes. 
 使用“python according_to_vsearch_blast6out_result_extract_the_single_match_genome.py”
 脚本（optional—）根据PAN_607_aligned_ssu.tsv得到大于等于99.6%的结果并提出ASV与细菌基因
