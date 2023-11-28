@@ -28,7 +28,7 @@ node=Cnode2
 #node=Gnode
 counter=0
 output=`pwd`/data
-
+partnum=10
 ```
 ```sh
 
@@ -102,15 +102,29 @@ conda activate pfam_annotation（我在集群中建了一个conda镜像（里面
 用和全蛋白组的基因注释，并自动将基因注释结果生成在目标文件夹中。
 #hmmscan注释一个细菌基因组的时长大约1个小时，所以这步会很耗时。
 ```sh
-conda activate pfam_annotation
-python batch_run_hmmscan.py -i data/genome_extract_result -o data/hmmscanResult
-conda deactivate
+partnum=10
+for((j=0; j<$partnum; j++ ))  ;do
+echo "#!/bin/bash
+#SBATCH -o ${output}/log/${name1}.%j.out
+#SBATCH -e ${output}/log/${name1}.%j.error
+#SBATCH --partition=${node}
+#SBATCH -J ${j}hmmscan
+#SBATCH -N 1
+#SBATCH -n ${thread}
+echo date
+source /public/home/2022122/.bashrc
+">a4.hmmscan.$j.sh
+done
 
 [[ -d data/hmmscanResult/ ]] || mkdir -p data/hmmscanResult/
+[[ -d data/log ]] || mkdir -p data/log
+j=0
 for i in `ls data/genome_extract_result|grep fasta`;
 do
+((j++))
+let r=j%partnum
 filename=${i/protein.fasta/hmmscan.tbl}
-echo conda run -n pfam_annotation hmmscan -o data/hmmscanResult/${filename} --noali --cpu ${thread} -T 10 /public/home/2022122/chenhuilong/ph_preference/pfam_annotation/Pfam-A.hmm data/genome_extract_result/${i}
+echo conda run -n pfam_annotation hmmscan  --tblout data/hmmscanResult/${filename} --noali --cpu ${thread} -T 10 /public/home/2022122/chenhuilong/ph_preference/pfam_annotation/Pfam-A.hmm data/genome_extract_result/${i} >>a4.hmmscan.$r.sh
 done
 
 ```
