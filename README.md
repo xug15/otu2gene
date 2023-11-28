@@ -110,7 +110,7 @@ conda deactivate
 for i in `ls data/genome_extract_result|grep fasta`;
 do
 filename=${i/protein.fasta/hmmscan.tbl}
-echo conda -n  hmmscan -o data/hmmscanResult/${filename} --noali --cpu ${thread} -T 10 /public/home/2022122/chenhuilong/ph_preference/pfam_annotation/Pfam-A.hmm data/genome_extract_result/${i}
+echo conda run -n pfam_annotation hmmscan -o data/hmmscanResult/${filename} --noali --cpu ${thread} -T 10 /public/home/2022122/chenhuilong/ph_preference/pfam_annotation/Pfam-A.hmm data/genome_extract_result/${i}
 done
 
 ```
