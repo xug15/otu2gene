@@ -105,9 +105,20 @@ conda activate pfam_annotation（我在集群中建了一个conda镜像（里面
 conda activate pfam_annotation
 python batch_run_hmmscan.py -i data/genome_extract_result -o data/hmmscanResult
 conda deactivate
+
+[[ -d data/hmmscanResult/ ]] || mkdir -p data/hmmscanResult/
+for i in `ls data/genome_extract_result|grep fasta`;
+do
+filename=${i/protein.fasta/hmmscan.tbl}
+echo conda -n  hmmscan -o data/hmmscanResult/${filename} --noali --cpu ${thread} -T 10 /public/home/2022122/chenhuilong/ph_preference/pfam_annotation/Pfam-A.hmm data/genome_extract_result/${i}
+done
+
 ```
 ## 5. 
 根据hmmscanResult文件夹中的结果，使用“batch_according_to_hmmResult_extract_all_gene_presence_or_absence_table-command_format.py“脚本批量提取细菌基因组全部基因类型的存在或缺失矩阵表。
 ```sh
 python batch_according_to_hmmResult_extract_all_gene_presence_or_absence_table-command_format.py -i   data/asv_genome_id_unique_match_ID.txt -m data/hmmscanResult -o data/all_gene_presence_absence_table_result
 ```
+
+
+
