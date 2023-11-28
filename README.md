@@ -20,6 +20,7 @@ vsearch --makeudb_usearch bac120_ssu_reps_r207.fna -output bac120_ssu_reps_r207.
 ```sh
 thread=50
 db=/public/home/2022122/chenhuilong/ph_preference/data/bac120_ssu_reps_r207.udb
+protin=/public/home/2022122/xugang/database/gtdb3/protein_faa_reps/bacteria_processed
 #node=Fnode2
 #node=Fnode1
 node=Cnode
@@ -89,9 +90,8 @@ ASV_998 RS_GCF_001542915.1
 
 
 ```sh
-cd /public/home/2022122/chenhuilong/ph_preference/data/protein_faa_reps/bacteria_processed
 
-python batch_according_to_match_id_file_extract_genome_multisequence.py -i asv_vs._genome_id.txt -d /public/home/2022122/chenhuilong/ph_preference/data/protein_faa_reps/bacteria_processed -o genome_extract_result
+python script/batch_according_to_match_id_file_extract_genome_multisequence.py -i data/asv_vs._genome_id.txt -d ${protein} -o data/genome_extract_result
 
 ```
 ## 4. Annotation protion function with hmmscan.
@@ -103,11 +103,11 @@ conda activate pfam_annotation（我在集群中建了一个conda镜像（里面
 #hmmscan注释一个细菌基因组的时长大约1个小时，所以这步会很耗时。
 ```sh
 conda activate pfam_annotation
-python batch_run_hmmscan.py -i genome_extract_result -o hmmscanResult
+python batch_run_hmmscan.py -i data/genome_extract_result -o data/hmmscanResult
 conda deactivate
 ```
 ## 5. 
 根据hmmscanResult文件夹中的结果，使用“batch_according_to_hmmResult_extract_all_gene_presence_or_absence_table-command_format.py“脚本批量提取细菌基因组全部基因类型的存在或缺失矩阵表。
 ```sh
-python batch_according_to_hmmResult_extract_all_gene_presence_or_absence_table-command_format.py -i  asv_vs._genome_id.txt -m hmmscanResult -o all_gene_presence_absence_table_result
+python batch_according_to_hmmResult_extract_all_gene_presence_or_absence_table-command_format.py -i  data/asv_vs._genome_id.txt -m data/hmmscanResult -o data/all_gene_presence_absence_table_result
 ```
