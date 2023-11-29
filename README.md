@@ -102,7 +102,8 @@ conda activate pfam_annotation（我在集群中建了一个conda镜像（里面
 用和全蛋白组的基因注释，并自动将基因注释结果生成在目标文件夹中。
 #hmmscan注释一个细菌基因组的时长大约1个小时，所以这步会很耗时。
 ```sh
-partnum=10
+partnum=100
+thread=2
 for((j=0; j<$partnum; j++ ))  ;do
 echo "#!/bin/bash
 #SBATCH -o ${output}/log/${name1}.%j.out
@@ -128,11 +129,11 @@ echo conda run -n pfam_annotation hmmscan  --tblout data/hmmscanResult/${filenam
 done
 
 ```
-## 5. 
+## 5. According to hmmscanResult folder, extract the information of gene present or absent.
 根据hmmscanResult文件夹中的结果，使用“batch_according_to_hmmResult_extract_all_gene_presence_or_absence_table-command_format.py“脚本批量提取细菌基因组全部基因类型的存在或缺失矩阵表。
 ```sh
-python batch_according_to_hmmResult_extract_all_gene_presence_or_absence_table-command_format.py -i   data/asv_genome_id_unique_match_ID.txt -m data/hmmscanResult -o data/all_gene_presence_absence_table_result
-```
+python script/batch_according_to_hmmResult_extract_all_gene_presence_or_absence_table-command_format.py -i data/asv_genome_id_unique_match_ID.txt -m data/hmmscanResult -o data/all_gene_presence_abasence_table_result
+``` 
 
 
 
